@@ -1,0 +1,45 @@
+# timerCounter Model
+---------------
+
+#
+# jquery插件模式
+#
+# 根据DOM元素上的自定义属性 设定倒计时的范围:diff = endtime - starttime
+# var starttime = $me.attr("begintime");
+  var endtime = $me.attr("endtime"); 
+# 倒计时完毕执行callback函数
+-----------------------定义callback及调用---------------------------
+     function callback(){
+          //doSomething
+          $(".timer").eq(0).remove();
+          $(".timer").eq(6).show();
+     }
+     $(".timer").timerCounter(callback);
+--------------------------------------------------------------------
+
+$.fn.timerCounter = function(callback) {
+
+          return this.each(function() {
+               var $me = $(this);
+               // var curtime = new Date().getTime();
+               var starttime = $me.attr("begintime");
+               var endtime = $me.attr("endtime");
+              
+               function setTime() {
+                    starttime ++;
+                    var diff = endtime - starttime;
+                    var day = Math.floor(diff / 86400),
+                    hour = Math.floor((diff - day * 86400) / 3600),
+                    minute = Math.floor((diff - day * 86400 - hour * 3600) / 60),
+                    second = Math.floor(diff - day * 86400 - hour * 3600 - minute * 60);
+                   
+                    if( 0>day || 0>hour || 0>minute || 0>second ) {
+                         callback();
+                    }else{
+                         $me.html("剩余 <span class='big'>"+hour+"</span> 时 <span class='big'>"+minute+"</span> 分 <span class='big'>"+second+"</span> 秒");
+                    }
+                   
+               }
+               setInterval(setTime,1000);
+          });
+     };
